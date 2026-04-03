@@ -1,215 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TimeTiers</title>
-  <style>
-    html { scroll-behavior: smooth; }
-    body { margin:0; font-family:Arial,sans-serif; background:#0b1220; color:#c9d1d9; }
-    header { position:sticky; top:0; background:rgba(10,15,25,0.9); backdrop-filter:blur(10px); padding:15px 20px; border-bottom:1px solid #1f2a3a; z-index:1000; display:flex; justify-content:space-between; align-items:center; }
-    header h1 { margin:0; color:#58a6ff; font-size:22px; }
-    nav a { margin-left:20px; color:#c9d1d9; text-decoration:none; font-weight:bold; padding:6px 10px; border-radius:6px; transition:0.2s; }
-    .active-link{background:#2383ff !important;color:#ffffff !important;} nav a.active-link:hover{color:#ffffff !important;}
-    .mobile-active{background:#2383ff !important;color:#ffffff !important;} nav a.mobile-active:hover{color:#ffffff !important;}
-    nav a:hover { color:#c9d1d9; }
-    
-    nav a:focus { outline:none; }
-    .container { max-width:800px; margin:auto; padding:20px; }
-    .player-card { display:flex; align-items:center; justify-content:space-between; background:linear-gradient(145deg,#0f1725,#0a0f1a); border:1px solid #1f2a3a; border-radius:12px; padding:10px; margin-bottom:8px; cursor:pointer; }
-    .player-card:hover { transform:scale(1.01); background:#111a2b; }
-    .left { display:flex; align-items:center; gap:15px; }
-    .rank-num { font-size:22px; font-weight:bold; width:40px; text-align:center; }
-    .player-name { font-size:18px; font-weight:bold; }
-    .tiers { display:grid; grid-template-columns:repeat(4,60px); gap:6px; }
-    .tier { padding:5px 0; border-radius:6px; font-size:11px; font-weight:bold; background:#1f2a3a; text-align:center; }
-    .rank-Splus{color:gold}.rank-S{color:#58a6ff}.rank-A{color:#3fb950}.rank-B{color:#d29922}.rank-C{color:#f85149}.rank-D{color:#8b949e}.rank-F{color:#6e7681}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TimeTiers</title>
 
-    .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center}
-    .modal-content{background:linear-gradient(145deg,#0f1725,#0a0f1a);padding:25px;border-radius:14px;border:1px solid #1f2a3a;width:360px}
-    .profile-top{display:flex;align-items:center;gap:15px;margin-bottom:15px}
-    .avatar{width:50px;height:50px;border-radius:50%;background:#1f2a3a}
-    .profile-name{font-size:18px;font-weight:bold}
-    .profile-rank{font-size:13px;color:#8b949e}
-    .modal-tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .modal-tier{background:#1f2a3a;padding:10px;border-radius:8px;text-align:center;font-size:13px;font-weight:bold}
-    .close-x{cursor:pointer;font-weight:bold;padding:4px 8px;border-radius:6px;background:#1f2a3a}
-  </style>
+<style>
+body{margin:0;font-family:Arial;background:#0b1220;color:#c9d1d9}
+header{display:flex;justify-content:space-between;padding:15px;background:#0a0f19}
+nav a{margin-left:15px;color:#c9d1d9;text-decoration:none;padding:6px 10px;border-radius:6px}
+.active-link,.mobile-active{background:#2383ff;color:#fff}
+.container{max-width:800px;margin:auto;padding:20px}
+
+.player-card{display:flex;justify-content:space-between;padding:10px;margin:8px 0;background:#111a2b;border-radius:10px;cursor:pointer}
+.top1{border:2px solid gold}
+.top2{border:2px solid silver}
+.top3{border:2px solid #cd7f32}
+
+.left{display:flex;gap:10px}
+.tiers{display:grid;grid-template-columns:repeat(4,50px);gap:5px}
+.tier{text-align:center;background:#1f2a3a;border-radius:5px;font-size:12px}
+
+.rank-Splus{color:gold}
+.rank-S{color:#58a6ff}
+.rank-A{color:#3fb950}
+.rank-B{color:#d29922}
+.rank-C{color:#f85149}
+
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,0.7)}
+.modal-content{background:#111a2b;padding:20px;border-radius:12px;width:300px}
+.avatar{width:60px;height:60px;border-radius:10px}
+
+.avatar.gold{border:2px solid gold}
+.avatar.silver{border:2px solid silver}
+.avatar.bronze{border:2px solid #cd7f32}
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>TimeTiers</h1>
-  <nav>
-    <a href="#leaderboard" id="navLeaderboard" onclick="setActive(event,'navLeaderboard')">Leaderboard</a>
-    <a href="#info" id="navInfo" onclick="setActive(event,'navInfo')">Info</a>
-    <a href="#contact" id="navContact" onclick="setActive(event,'navContact')">Contact</a>
-    <a href="#" id="mobileBtn" onclick="toggleMobile(event)">Mobile</a>
-  </nav>
+<h1>TimeTiers</h1>
+<nav>
+<a href="#leaderboard" id="navLeaderboard">Leaderboard</a>
+<a href="#info" id="navInfo">Info</a>
+<a href="#contact" id="navContact">Contact</a>
+<a href="#" id="mobileBtn">Mobile</a>
+</nav>
 </header>
 
 <div class="container">
-  <input id="search" placeholder="Search player..." style="width:60%;padding:8px;margin-bottom:15px;border-radius:8px;border:none;background:#1f2a3a;color:white;display:block;margin-left:auto;margin-right:auto;">
-  <div id="leaderboard"></div>
 
-  <section id="info"><h2>Info</h2><p>Rankings are based on overall player skill across time-trial games (non-rhythm). Supported games include ETOH, SpeedBlox, and similar titles. Games such as FE2 and Trial.os are not considered. Player placement is determined through a combination of community input and final review by the owner (zvoidskixlled).</p></section>
-  <section id="contact"><h2>Contact</h2><p>Email: somberkidd@gmail.com</p><p style="margin-top:10px;font-size:12px;color:#8b949e;">© 2026 TimeTiers. All rights reserved.</p></section>
+<input id="search" placeholder="Search player..." style="width:100%;padding:8px;margin-bottom:10px">
+
+<div style="display:flex;justify-content:space-between;font-weight:bold">
+<div># Name</div>
+<div class="tiers">
+<div>Bounce</div><div>CC</div><div>EV</div><div>Overall</div>
+</div>
+</div>
+
+<div id="leaderboard"></div>
+
+<h2 id="info">Info</h2>
+<p>Ranking players based on overall skill across ETOH, SpeedBlox, and similar non-rhythm games.</p>
+
+<h2 id="contact">Contact</h2>
+<p>somberkidd@gmail.com</p>
+<p style="font-size:12px">© TimeTiers</p>
+
 </div>
 
 <div id="modal" class="modal">
-  <div class="modal-content">
-    <div class="profile-top">
-      <img class="avatar" id="m-avatar" src="" />
-      <div>
-        <div class="profile-name" id="m-name"></div>
-        <div class="profile-rank" id="m-rank"></div>
-      </div>
-      <div class="close-x" onclick="closeModal()">X</div>
-    </div>
-    <div class="modal-tiers">
-      <div class="modal-tier" id="m-overall"></div>
-      <div class="modal-tier" id="m-bounce"></div>
-      <div class="modal-tier" id="m-cc"></div>
-      <div class="modal-tier" id="m-evuuz"></div>
-    </div>
-  </div>
+<div class="modal-content">
+<img id="m-avatar" class="avatar">
+<h3 id="m-name"></h3>
+<p id="m-rank"></p>
+<p id="m-region"></p>
+<div id="m-overall"></div>
+<div id="m-bounce"></div>
+<div id="m-cc"></div>
+<div id="m-evuuz"></div>
+<button onclick="closeModal()">Close</button>
+</div>
 </div>
 
 <script>
 function getRank(pos){
-  if(pos===1) return {label:'S+',class:'rank-Splus'};
-  if(pos<=10) return {label:'S',class:'rank-S'};
-  if(pos<=25) return {label:'A',class:'rank-A'};
-  if(pos<=50) return {label:'B',class:'rank-B'};
-  if(pos<=75) return {label:'C',class:'rank-C'};
-  if(pos<=90) return {label:'D',class:'rank-D'};
-  return {label:'F',class:'rank-F'};
+if(pos===1)return{label:'S+',class:'rank-Splus'}
+if(pos<=10)return{label:'S',class:'rank-S'}
+if(pos<=25)return{label:'A',class:'rank-A'}
+return{label:'B',class:'rank-B'}
 }
 
-let mobileMode=false;
-let currentPlayers=[];
+let mobile=false
+let players=[]
 
-function buildLeaderboard(){
-  currentPlayers=[];
-  const container=document.getElementById('leaderboard');
-  container.innerHTML='';
-
-  for(let i=1;i<=100;i++){
-    const overall=getRank(i);
-    const bounce=getRank(i);
-    const cc=getRank(i);
-    const evuuz=getRank(i);
-
-    const name = mobileMode ? (i===1?'MobileChampion':'Mobile Player '+i) : (i===1?'ThePersonYouMetNow':'Player '+i);
-    currentPlayers.push({id:i,name,overall,bounce,cc,evuuz});
-  }
-
-  renderPlayers(currentPlayers);
+function build(){
+players=[]
+for(let i=1;i<=50;i++){
+let name=i===1?'ThePersonYouMetNow':'Player '+i
+players.push({
+id:i,
+name,
+overall:getRank(i),
+bounce:getRank(i),
+cc:getRank(i),
+evuuz:getRank(i),
+region:['NA','EU','SA','AS','AU','AF'][i%6]
+})
+}
+render(players)
 }
 
-function renderPlayers(list){
-  const container=document.getElementById('leaderboard');
-  container.innerHTML='';
+function render(list){
+let el=document.getElementById('leaderboard')
+el.innerHTML=''
 
-  list.forEach(p => {
-    const card=document.createElement('div');
-    card.className='player-card';
+list.forEach(p=>{
+let div=document.createElement('div')
+div.className='player-card'
+if(p.id==1)div.classList.add('top1')
+if(p.id==2)div.classList.add('top2')
+if(p.id==3)div.classList.add('top3')
 
-    card.innerHTML=`
-      <div class="left">
-        <div class="rank-num">#${p.id}</div>
-        <div class="player-name">${p.name}</div>
-      </div>
-      <div class="tiers">
-        <div class="tier ${p.bounce.class}">${p.bounce.label}</div>
-        <div class="tier ${p.cc.class}">${p.cc.label}</div>
-        <div class="tier ${p.evuuz.class}">${p.evuuz.label}</div>
-        <div class="tier ${p.overall.class}">${p.overall.label}</div>
-      </div>
-    `;
+div.innerHTML=`
+<div class="left">#${p.id} ${p.name}</div>
+<div class="tiers">
+<div class="${p.bounce.class}">${p.bounce.label}</div>
+<div class="${p.cc.class}">${p.cc.label}</div>
+<div class="${p.evuuz.class}">${p.evuuz.label}</div>
+<div class="${p.overall.class}">${p.overall.label}</div>
+</div>`
 
-    card.onclick=()=>openModal(p.id,p.overall.label,p.bounce.label,p.cc.label,p.evuuz.label);
-    container.appendChild(card);
-  });
+div.onclick=()=>openModal(p)
+el.appendChild(div)
+})
 }
 
-function setActive(e,id){
-  if(e) e.preventDefault();
+document.getElementById('search').addEventListener('input',e=>{
+let q=e.target.value.toLowerCase()
+render(players.filter(p=>p.name.toLowerCase().includes(q)))
+})
 
-  const links=['navLeaderboard','navInfo','navContact'];
-  links.forEach(l=>{
-    const el=document.getElementById(l);
-    if(el) el.classList.remove('active-link');
-  });
+function openModal(p){
+document.getElementById('modal').style.display='flex'
+document.getElementById('m-name').innerText=p.name
+document.getElementById('m-rank').innerText='Rank #'+p.id
+document.getElementById('m-region').innerText=p.region
 
-  const active=document.getElementById(id);
-  if(active) active.classList.add('active-link');
+let avatar=document.getElementById('m-avatar')
+avatar.className='avatar'
 
-  // scroll manually
-  const target = active.getAttribute('href');
-  if(target && target.startsWith('#')){
-    const section=document.querySelector(target);
-    if(section) section.scrollIntoView({behavior:'smooth'});
-  }
-}
+if(p.id==1)avatar.classList.add('gold')
+if(p.id==2)avatar.classList.add('silver')
+if(p.id==3)avatar.classList.add('bronze')
 
-function toggleMobile(e){
-  if(e) e.preventDefault();
-  const btn=document.getElementById('mobileBtn');
-  btn.blur();
-
-  mobileMode = !mobileMode;
-
-  // proper toggle (no syntax errors, no stuck state)
-  btn.classList.toggle('mobile-active', mobileMode);
-
-  buildLeaderboard();
-
-  const query = document.getElementById('search').value.toLowerCase();
-  if(query){
-    const filtered = currentPlayers.filter(p => p.name.toLowerCase().includes(query));
-    renderPlayers(filtered);
-  }
-}
-
-// SEARCH FUNCTION (fixed)
-// 🔍 SEARCH (safe load)
-document.addEventListener('DOMContentLoaded', () => {
-  const searchInput = document.getElementById('search');
-  if(!searchInput) return;
-
-  searchInput.addEventListener('input', function(){
-    const query = this.value.toLowerCase();
-
-    const filtered = currentPlayers.filter(p =>
-      p.name.toLowerCase().includes(query)
-    );
-
-    renderPlayers(filtered);
-  });
-});
-
-function openModal(id,o,b,c,e){
-  document.getElementById('m-name').innerText = (id===1 ? 'ThePersonYouMetNow' : 'Player '+id);
-  document.getElementById('m-rank').innerText = 'Rank #'+id;
-  document.getElementById('m-overall').innerText = 'Overall: '+o;
-  document.getElementById('m-bounce').innerText = 'Bounce: '+b;
-  document.getElementById('m-cc').innerText = 'Corner Cutting: '+c;
-  document.getElementById('m-evuuz').innerText = 'Evuuz: '+e;
-
-  const userId = (id===1 ? 669007006 : 1);
-  fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`)
-    .then(res=>res.json())
-    .then(data=>{document.getElementById('m-avatar').src=data.data[0].imageUrl;});
-
-  document.getElementById('modal').style.display='flex';
+fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=669007006&size=150x150&format=Png&isCircular=false`)
+.then(r=>r.json())
+.then(d=>{
+avatar.src=d.data?.[0]?.imageUrl||''
+})
 }
 
 function closeModal(){
-  document.getElementById('modal').style.display='none';
+document.getElementById('modal').style.display='none'
 }
 
-buildLeaderboard();
+build()
 </script>
 
 </body>
