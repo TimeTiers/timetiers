@@ -1,42 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TimeTiers</title>
-
   <style>
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #020617);
-      color: white;
+      background: #0b1220;
+      color: #c9d1d9;
     }
 
-    h1 {
-      text-align: center;
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(10,15,25,0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      border-bottom: 1px solid #1f2a3a;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #58a6ff;
+      font-size: 22px;
+    }
+
+    nav a {
+      margin-left: 20px;
+      color: #c9d1d9;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover { color: #58a6ff; }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
       padding: 20px;
-      font-size: 40px;
     }
 
     .leaderboard {
-      max-width: 900px;
-      margin: auto;
+      margin-top: 20px;
     }
 
-    .player {
+    .player-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #0f172a;
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 10px;
+      background: linear-gradient(145deg, #0f1725, #0a0f1a);
+      border: 1px solid #1f2a3a;
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
       transition: 0.2s;
-      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
     }
 
-    .player:hover {
-      transform: scale(1.02);
-      background: #1e293b;
+    .player-card:hover {
+      transform: scale(1.01);
+      background: #111a2b;
     }
 
     .left {
@@ -45,75 +76,297 @@
       gap: 15px;
     }
 
-    .rank {
+    .rank-num {
       font-size: 22px;
       font-weight: bold;
       width: 40px;
-      text-align: right;
+      text-align: center;
     }
 
-    .name {
+    .player-name {
       font-size: 18px;
       font-weight: bold;
     }
 
-    .time {
-      opacity: 0.7;
-      font-size: 14px;
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      justify-content: center;
+      gap: 6px;
     }
 
     .tier {
-      padding: 5px 12px;
+      padding: 5px 0;
       border-radius: 6px;
+      font-size: 11px;
       font-weight: bold;
-      font-size: 14px;
+      background: #1f2a3a;
+      text-align: center;
+      width: 60px;
     }
 
-    .S { background: #ff4d4d; }
-    .A { background: #ff944d; }
-    .B { background: #ffd24d; color: black; }
-    .C { background: #4dff88; color: black; }
-    .D { background: #4da6ff; }
+    .rank-Splus { color: gold; }
+    .rank-S { color: #58a6ff; }
+    .rank-A { color: #3fb950; }
+    .rank-B { color: #d29922; }
+    .rank-C { color: #f85149; }
+    .rank-D { color: #8b949e; }
+    .rank-F { color: #6e7681; }
 
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #0f1725, #0a0f1a);
+      padding: 25px;
+      border-radius: 14px;
+      border: 1px solid #1f2a3a;
+      width: 360px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .profile-top {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #1f2a3a;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .profile-rank {
+      font-size: 13px;
+      color: #8b949e;
+    }
+
+    .modal-tiers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .modal-tier {
+      background: #1f2a3a;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+    .close-x {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #1f2a3a;
+    }
+
+    .modal-tiers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .modal-tier {
+      background: #1f2a3a;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      background: #238636;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
-
 <body>
 
-<h1>⏱️ TimeTiers Leaderboard</h1>
+<header>
+  <h1>TimeTiers</h1>
+  <nav>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="#info">Info</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
 
-<div class="leaderboard" id="board"></div>
+<div class="container">
+
+  <div id="leaderboard" class="leaderboard">
+  <div class="player-card" style="font-weight:bold; cursor:default; background:#0f1725;">
+    <div class="left">
+      <div class="rank-num">#</div>
+      <div class="player-name">Player</div>
+    </div>
+    <div class="tiers">
+      <div class="tier">Bounce</div>
+      <div class="tier">CC</div>
+      <div class="tier">Evuuz</div>
+      <div class="tier">Overall</div>
+    </div>
+  </div>
+</div>
+
+  <section id="info">
+    <h2>Info</h2>
+    <p>Ranks based on Bounce, CC, and Evuuz.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Email: your@email.com</p>
+  </section>
+
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div class="profile-top">
+      <img class="avatar" id="m-avatar" src="" />
+      <div>
+        <div class="profile-name" id="m-name"></div>
+        <div class="profile-rank" id="m-rank"></div>
+      </div>
+      <div class="close-x" onclick="closeModal()">X</div>
+    </div>
+
+    <div class="modal-tiers">
+      <div class="modal-tier" id="m-overall"></div>
+      <div class="modal-tier" id="m-bounce"></div>
+      <div class="modal-tier" id="m-cc"></div>
+      <div class="modal-tier" id="m-evuuz"></div>
+    </div>
+  </div>
+</div>
+    </div>
+
+    <div class="modal-tiers">
+      <div class="modal-tier" id="m-overall"></div>
+      <div class="modal-tier" id="m-bounce"></div>
+      <div class="modal-tier" id="m-cc"></div>
+      <div class="modal-tier" id="m-evuuz"></div>
+    </div>
+  </div>
+</div>
+</div>
 
 <script>
-  const board = document.getElementById("board");
+function getRank(pos){
+  if(pos===1) return {label:'S+',class:'rank-Splus'};
+  if(pos<=10) return {label:'S',class:'rank-S'};
+  if(pos<=25) return {label:'A',class:'rank-A'};
+  if(pos<=50) return {label:'B',class:'rank-B'};
+  if(pos<=75) return {label:'C',class:'rank-C'};
+  if(pos<=90) return {label:'D',class:'rank-D'};
+  return {label:'F',class:'rank-F'};
+}
 
-  function getTier(rank) {
-    if (rank <= 5) return "S";
-    if (rank <= 15) return "A";
-    if (rank <= 35) return "B";
-    if (rank <= 70) return "C";
-    return "D";
-  }
+const container = document.getElementById('leaderboard');
 
-  for (let i = 1; i <= 100; i++) {
-    let player = document.createElement("div");
-    player.className = "player";
+for(let i=1;i<=100;i++){
+  const overall = getRank(i);
+  const bounce = getRank(i);
+  const cc = getRank(i);
+  const evuuz = getRank(i);
 
-    let tier = getTier(i);
+  const card = document.createElement('div');
+  card.className='player-card';
 
-    player.innerHTML = `
-      <div class="left">
-        <div class="rank">#${i}</div>
-        <div>
-          <div class="name">Player${i}</div>
-          <div class="time">${Math.floor(Math.random()*60)+1}:${Math.floor(Math.random()*60).toString().padStart(2,"0")}</div>
-        </div>
-      </div>
-      <div class="tier ${tier}">${tier}</div>
-    `;
+  card.innerHTML = `
+    <div class="left">
+      <div class="rank-num">#${i}</div>
+      <div class="player-name">${i===1 ? 'ThePersonYouMetNow' : 'Player ' + i}</div>
+    </div>
 
-    board.appendChild(player);
-  }
+    <div class="tiers">
+      <div class="tier ${bounce.class}">${bounce.label}</div>
+      <div class="tier ${cc.class}">${cc.label}</div>
+      <div class="tier ${evuuz.class}">${evuuz.label}</div>
+      <div class="tier ${overall.class}">${overall.label}</div>
+    </div>
+  `;
+
+  card.onclick = ()=> openModal(i,overall.label,bounce.label,cc.label,evuuz.label);
+
+  container.appendChild(card);
+}
+
+function openModal(id,o,b,c,e){
+  document.getElementById('m-name').innerText = (id===1 ? 'ThePersonYouMetNow' : 'Player ' + id);
+  document.getElementById('m-rank').innerText = 'Rank #' + id;
+  document.getElementById('m-overall').innerText = 'Overall: ' + o;
+  document.getElementById('m-bounce').innerText = 'Bounce: ' + b;
+  document.getElementById('m-cc').innerText = 'Corner Cutting: ' + c;
+  document.getElementById('m-evuuz').innerText = 'Evuuz: ' + e;
+
+  // Roblox avatar (fixed using official thumbnail API)
+  const userId = (id===1 ? 669007006 : 1);
+
+  fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`)
+    .then(res => res.json())
+    .then(data => {
+      const img = data.data[0].imageUrl;
+      document.getElementById('m-avatar').src = img;
+    })
+    .catch(() => {
+      // fallback if it fails (local file / CORS)
+      document.getElementById('m-avatar').src = 'https://via.placeholder.com/50';
+    });
+
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal(){
+  document.getElementById('modal').style.display='none';
+}
+
 </script>
 
 </body>
