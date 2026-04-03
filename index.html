@@ -111,6 +111,9 @@
       <div class="modal-tier"><span>Corner Cutting</span><div id="m-cc"></div></div>
       <div class="modal-tier"><span>Evuuz</span><div id="m-evuuz"></div></div>
     </div>
+      <div class="modal-tier" id="m-bounce"></div>
+      <div class="modal-tier" id="m-cc"></div>
+      <div class="modal-tier" id="m-evuuz"></div>
     </div>
   </div>
 </div>
@@ -270,19 +273,14 @@ function openModal(p){
     fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`)
       .then(res=>res.json())
       .then(data=>{
-        if(data && data.data && data.data[0] && data.data[0].imageUrl){
-          avatar.src = data.data[0].imageUrl;
-        } else {
-          avatar.src = 'https://tr.rbxcdn.com/default-avatar-headshot.png';
+        if(data && data.data && data.data[0]){
+          avatar.src=data.data[0].imageUrl;
         }
       })
       .catch(()=>{
-        avatar.src = 'https://tr.rbxcdn.com/default-avatar-headshot.png';
+        avatar.src='';
       });
-  } else {
-    avatar.src = 'https://tr.rbxcdn.com/default-avatar-headshot.png';
   }
-        }
 
   const modal=document.getElementById('modal');
   modal.style.display='flex';
