@@ -144,7 +144,7 @@ function buildLeaderboard(){
     const cc=getRank(i);
     const evuuz=getRank(i);
 
-    const name = mobileMode ? (i===1?'MobileChampion':'Mobile Player '+i) : (i===1?'ThePersonYouMetNow':'Player '+i);
+    const name = mobileMode ? (i===1?'MobileChampion':'Mobile Player '+i) : (i===1?'PirateCapy':'Player '+i);
     const regions=['NA','EU','SA','AS','AU','AF'];
     const region = regions[i % regions.length];
     currentPlayers.push({id:i,name,overall,bounce,cc,evuuz,region});
