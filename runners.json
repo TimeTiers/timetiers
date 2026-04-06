@@ -846,5 +846,17 @@
     "device": "Mobile",
     "youtube": "https://www.youtube.com/@SCR_Ilikerobloxcool",
     "region": "AS"
+  },
+  {
+    "id": "10416766722",
+    "name": "Evshifts2",
+    "display": "zawyups",
+    "bounce": 75,
+    "cc": 89,
+    "consistency": 71,
+    "cam": 72,
+    "device": "PC",
+    "youtube": "N/A",
+    "region": "EU"
   }
 ]
