@@ -851,10 +851,10 @@
     "id": "10416766722",
     "name": "Evshifts2",
     "display": "zawyups",
-    "bounce": 75,
-    "cc": 89,
+    "bounce": 76.5,
+    "cc": 91.5,
     "consistency": 71,
-    "cam": 72,
+    "cam": 65,
     "device": "PC",
     "youtube": "N/A",
     "region": "EU"
