@@ -330,7 +330,7 @@
     "bounce": 77.5,
     "cc": 70.5,
     "consistency": 75,
-    "cam": 61,
+    "cam": 68,
     "device": "PC",
     "youtube": "https://www.youtube.com/@piratecapy",
     "region": "EU"
@@ -340,9 +340,9 @@
     "name": "JunkHeadBot123",
     "display": "JunkHeadBot123",
     "bounce": 76,
-    "cc": 75,
+    "cc": 73.5,
     "consistency": 69,
-    "cam": 73,
+    "cam": 71,
     "device": "Mobile",
     "youtube": "https://www.youtube.com/@JunkHeadBot123",
     "region": "EU"
